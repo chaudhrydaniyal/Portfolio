@@ -63,16 +63,36 @@ function getInputVal(id){
 
 // Save message to firebase
 
-async function saveMessage(name, email, message){
+async function saveMessage(name, email, message) {
 
-    var currentdate = new Date(); 
+    var currentdate = new Date();
+
+    
+    const userRef = db.doc(`messages/${email}`)
+    console.log(await userRef.get().then((docSnapshot)=>docSnapshot.exists))
+
+    if (await userRef.get().then((docSnapshot)=>docSnapshot.exists)) {
 
 
-    const userRef = db.collection('messages').doc(`${email}/${currentdate}`)
-    await userRef.set({
-        name,
-        email,
-        message
-    })
+        await userRef.update({
+            message: firebase.firestore.FieldValue.arrayUnion(`${message}`)
+        })
+
+
+    }
+
+    else {
+
+
+        await userRef.set({
+            name,
+            email,
+            message: firebase.firestore.FieldValue.arrayUnion(`${message}`)
+
+
+
+        })
+    }
+
 
 }
