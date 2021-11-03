@@ -68,7 +68,7 @@ async function saveMessage(name, email, message){
     var currentdate = new Date(); 
 
 
-    const userRef = db.doc(`${email}/${currentdate}`)
+    const userRef = db.collection('messages').doc(`${email}/${currentdate}`)
     await userRef.set({
         name,
         email,
